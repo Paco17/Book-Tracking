@@ -30,9 +30,15 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage})
-
 dotenv.config()
 const PORT = process.env.PORT || 5000;
+
+//Handling our errors globally
+app.use((err, req, res, next) => {
+    const status = err.status || 500
+    const message = err.message || "Something went wrong"
+    return res.status(status).json({message})
+})
 
 mongoose.connect(process.env.MONGO_URL).then(()=>{
     app.listen(PORT, () =>{
