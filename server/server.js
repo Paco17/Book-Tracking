@@ -7,6 +7,11 @@ import multer from 'multer';
 import {fileURLToPath} from 'url'
 import path from 'path';
 
+//Routes
+import UserRoutes from './Routes/User.js';
+import TaskRoutes from './Routes/Task.js';
+import { Register } from './Controllers/User';
+
 //Global variables
 __filename = fileURLToPath(import.meta.url)
 __dirname = path.dirname(__filename)
@@ -17,6 +22,11 @@ app.use(express.json()); //For post request parse json data
 app.use(cors())
 app.use(cookieParser());
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
+
+//Register routes
+app.use('auth/register', upload.single('picture'), Register)
+app.use('/auth', UserRoutes)
+app.use('/task', TaskRoutes)
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -32,6 +42,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage})
 dotenv.config()
 const PORT = process.env.PORT || 5000;
+
 
 //Handling our errors globally
 app.use((err, req, res, next) => {
