@@ -10,11 +10,11 @@ import path from 'path';
 //Routes
 import UserRoutes from './Routes/User.js';
 import TaskRoutes from './Routes/Task.js';
-import { Register } from './Controllers/User';
+import { Register } from './Controllers/User.js';
 
 //Global variables
-__filename = fileURLToPath(import.meta.url)
-__dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 
 const app = express();
@@ -22,11 +22,6 @@ app.use(express.json()); //For post request parse json data
 app.use(cors())
 app.use(cookieParser());
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
-
-//Register routes
-app.use('auth/register', upload.single('picture'), Register)
-app.use('/auth', UserRoutes)
-app.use('/task', TaskRoutes)
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -43,6 +38,10 @@ const upload = multer({storage})
 dotenv.config()
 const PORT = process.env.PORT || 5000;
 
+//Register routes
+app.use('/auth/register', upload.single('picture'), Register)
+app.use('/auth', UserRoutes)
+app.use('/task', TaskRoutes)
 
 //Handling our errors globally
 app.use((err, req, res, next) => {
